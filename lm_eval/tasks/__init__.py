@@ -45,6 +45,8 @@ from . import lambada_multilingual
 from . import mutual
 # from . import truthfulqa
 
+from . import superlim
+
 ########################################
 # Translation tasks
 ########################################
@@ -216,7 +218,10 @@ TASK_REGISTRY = {
     "pile_ubuntu-irc": pile.PileUbuntuIrc,
     "pile_wikipedia": pile.PileWikipedia,
     "pile_youtubesubtitles": pile.PileYoutubeSubtitles,
-    
+
+    #SuperLim
+    "swewsc": superlim.SweWsc,
+
 }
 
 

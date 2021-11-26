@@ -5,13 +5,15 @@ from ..base import Task
 class HFTask(Task):
     DATASET_PATH = None
     DATASET_NAME = None
+    DATA_FILES = None
+    USE_AUTH_TOKEN = False
 
     def __init__(self):
         self.data = None
         super().__init__()
 
     def download(self):
-        self.data = datasets.load_dataset(path=self.DATASET_PATH, name=self.DATASET_NAME)
+        self.data = datasets.load_dataset(path=self.DATASET_PATH, name=self.DATASET_NAME, data_files=self.DATA_FILES, use_auth_token=self.USE_AUTH_TOKEN)
 
     def has_training_docs(self):
         """Whether the task has a training set"""
