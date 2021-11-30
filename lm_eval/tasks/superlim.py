@@ -2,8 +2,10 @@ from . common import HFTask, yesno
 from ..utils import general_detokenize
 from ..metrics import mean, acc_all, metric_max_over_ground_truths
 import os
+from lm_eval.base import rf
 
 class SweWsc(HFTask):
+   VERSION = 0
    DATASET_PATH = "AI-Sweden/SuperLim"
    DATASET_NAME = "SweWsc"
    DATA_FILES = {"test":"SweWsc/test.jsonl"}
