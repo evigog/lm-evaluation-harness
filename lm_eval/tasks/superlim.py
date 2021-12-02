@@ -25,13 +25,13 @@ class SweWsc(HFTask):
     return "Does the noun match the pronoun?"
 
    def doc_to_text(self, doc):
-    raw_passage = doc["text"]
+    raw_passage = doc["passage"]
     # NOTE: HuggingFace span indices are word-based not character-based.
-    pre = " ".join(raw_passage.split()[:doc["span1_begin"]])
-    post = raw_passage[len(pre) + len(doc["span1_text"]) + 1:]
-    passage = general_detokenize(pre + " *{}*".format(doc["span1_text"]) + post)
-    noun = doc["span2_text"]
-    pronoun = doc["span1_text"]
+    pre = " ".join(raw_passage.split()[:doc["challenge_begin"]])
+    post = raw_passage[len(pre) + len(doc["challenge_text"]) + 1:]
+    passage = general_detokenize(pre + " *{}*".format(doc["challenge_text"]) + post)
+    noun = doc["response_text"]
+    pronoun = doc["challenge_text"]
     text = (
             f"Passage: {passage}\n"
             + f"Fråga: I avsnittet ovan, syftar pronomenet \"*{pronoun}*\" på \"*{noun}*\"?\n"
