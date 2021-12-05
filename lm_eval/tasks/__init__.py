@@ -221,6 +221,7 @@ TASK_REGISTRY = {
 
     #SuperLim
     "swewsc": superlim.SweWsc,
+    "swefracas": superlim.SweFracas,
 
 }
 

@@ -137,3 +137,73 @@ class SweSat(HFTask, MultipleChoiceTask):
             "acc": mean,
             "acc_norm": mean,
         }
+
+
+class SweFracas(HFTask): #The json contains list and I think it cannot handle this...
+   VERSION = 0
+   DATASET_PATH = "AI-Sweden/SuperLim"
+   DATASET_NAME = "SweFracas"
+   DATA_FILES = {"test":"SweFracas/test.json"}
+   #USE_AUTH_TOKEN = os.environ['HF_TOKEN']
+
+   def has_training_docs(self):
+        return False
+
+   def has_validation_docs(self):
+        return False
+
+   def has_test_docs(self):
+        return True
+
+   def fewshot_description(self):
+    return "Is the answer on the question yes or no given the given statements?"
+
+   def doc_to_text(self, doc):
+    # raw_passage = doc["passage"]
+    # # NOTE: HuggingFace span indices are word-based not character-based.
+    # pre = " ".join(raw_passage.split()[:doc["challenge_begin"]])
+    # post = raw_passage[len(pre) + len(doc["challenge_text"]) + 1:]
+    # passage = general_detokenize(pre + " *{}*".format(doc["challenge_text"]) + post)
+    # noun = doc["response_text"]
+    # pronoun = doc["challenge_text"]
+    question = doc["fråga"]
+    statements = doc["premiss"]
+    context = ""
+    for index,i in enumerate(statements):
+        context += index +": "+i+"\n"
+    text = (
+            f"Passage: {context}"
+            + f"Fråga: {question}\n"
+            + "Svar:"
+        )
+    return text
+
+   def doc_to_target(self, doc):
+    return " " + yesno(doc['svar'])
+
+   def construct_requests(self, doc, ctx):
+
+        ll_yes, _ = rf.loglikelihood(ctx, ' yes')
+        ll_no, _ = rf.loglikelihood(ctx, ' no')
+
+        return ll_yes, ll_no
+
+   def process_results(self, doc, results):
+        ll_yes, ll_no = results
+        gold = doc['responses'][0]["correct"]
+
+        acc = 1. if (ll_yes > ll_no) == gold else 0.
+
+        return {
+            "acc": acc
+        }
+
+   def higher_is_better(self):
+        return {
+            "acc": True
+        }
+
+   def aggregation(self):
+        return {
+            "acc": mean
+        }
