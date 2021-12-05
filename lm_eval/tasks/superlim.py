@@ -10,7 +10,7 @@ class SweWsc(HFTask):
    DATASET_PATH = "AI-Sweden/SuperLim"
    DATASET_NAME = "SweWsc"
    DATA_FILES = {"test":"SweWsc/test.csv"}
-   USE_AUTH_TOKEN = os.environ['HF_TOKEN']
+   #USE_AUTH_TOKEN = os.environ['HF_TOKEN']
 
    def has_training_docs(self):
         return False
@@ -27,20 +27,20 @@ class SweWsc(HFTask):
    def doc_to_text(self, doc):
     raw_passage = doc["passage"]
     # NOTE: HuggingFace span indices are word-based not character-based.
-    pre = " ".join(raw_passage.split()[:doc["challenge_begin"]])
-    post = raw_passage[len(pre) + len(doc["challenge_text"]) + 1:]
-    passage = general_detokenize(pre + " *{}*".format(doc["challenge_text"]) + post)
+    pre = raw_passage[:doc["challenge_begin"]]
+    post = raw_passage[len(pre) + len(doc["challenge_text"]):]
+    passage = pre + "*{}*".format(doc["challenge_text"]) + post
     noun = doc["response_text"]
     pronoun = doc["challenge_text"]
     text = (
             f"Passage: {passage}\n"
-            + f"Fråga: I avsnittet ovan, syftar pronomenet \"*{pronoun}*\" på \"*{noun}*\"?\n"
+            + f"Fråga: I avsnittet ovan, syftar pronomenet *{pronoun}* på *{noun}*?\n"
             + "Svar:"
         )
     return text
 
    def doc_to_target(self, doc):
-    return " " + yesno(doc['label'])
+    return ' ja' if doc['label']==1 else ' nej'
 
    def construct_requests(self, doc, ctx):
 
@@ -75,7 +75,7 @@ class SweSat(HFTask, MultipleChoiceTask):
    DATASET_PATH = "AI-Sweden/SuperLim"
    DATASET_NAME = "SweSat"
    DATA_FILES = {"test":"SweSat/test.csv"}
-   USE_AUTH_TOKEN = os.environ['HF_TOKEN']
+   #USE_AUTH_TOKEN = os.environ['HF_TOKEN']
 
    def has_training_docs(self):
         return False
@@ -143,7 +143,7 @@ class SweFracas(HFTask): #The json contains list and I think it cannot handle th
    VERSION = 0
    DATASET_PATH = "AI-Sweden/SuperLim"
    DATASET_NAME = "SweFracas"
-   DATA_FILES = {"test":"SweFracas/test.json"}
+   DATA_FILES = {"test":"SweFracas/swefracas.csv"}
    #USE_AUTH_TOKEN = os.environ['HF_TOKEN']
 
    def has_training_docs(self):
@@ -167,19 +167,20 @@ class SweFracas(HFTask): #The json contains list and I think it cannot handle th
     # noun = doc["response_text"]
     # pronoun = doc["challenge_text"]
     question = doc["fråga"]
-    statements = doc["premiss"]
+    index=1
     context = ""
-    for index,i in enumerate(statements):
-        context += index +": "+i+"\n"
+    while doc["premiss_"+str(index)]!= None:
+        context += "Premiss " +str(index) +": "+doc["premiss_"+str(index)]+"\n"
+        index+=1
     text = (
-            f"Passage: {context}"
+            f"Passage:\n{context}"
             + f"Fråga: {question}\n"
             + "Svar:"
         )
     return text
 
    def doc_to_target(self, doc):
-    return " " + yesno(doc['svar'])
+    return ' ja' if doc['svar']=='Ja' else ' nej'
 
    def construct_requests(self, doc, ctx):
 
