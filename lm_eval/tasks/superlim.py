@@ -51,7 +51,8 @@ class SweWsc(HFTask):
 
    def process_results(self, doc, results):
         ll_yes, ll_no = results
-        gold = doc['responses'][0]["correct"]
+        gold = True if doc['label'] == 1 else False
+        #gold = doc['responses'][0]["correct"]
 
         acc = 1. if (ll_yes > ll_no) == gold else 0.
 
