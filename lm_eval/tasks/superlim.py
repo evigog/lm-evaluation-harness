@@ -171,7 +171,7 @@ class SweFracas(HFTask): #The json contains list and I think it cannot handle th
     index=1
     context = ""
     while ("premiss_"+str(index) in doc):
-        while (doc["premiss_"+str(index)]!= None) :
+        if (doc["premiss_"+str(index)]!= None) :
             context += "Premiss " +str(index) +": "+doc["premiss_"+str(index)]+"\n"
         index+=1
     text = (
