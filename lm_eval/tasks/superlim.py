@@ -44,8 +44,8 @@ class SweWsc(HFTask):
 
    def construct_requests(self, doc, ctx):
 
-        ll_yes, _ = rf.loglikelihood(ctx, ' yes')
-        ll_no, _ = rf.loglikelihood(ctx, ' no')
+        ll_yes, _ = rf.loglikelihood(ctx, ' ja')
+        ll_no, _ = rf.loglikelihood(ctx, ' nej')
 
         return ll_yes, ll_no
 
@@ -184,8 +184,8 @@ class SweFracas(HFTask): #The json contains list and I think it cannot handle th
 
    def construct_requests(self, doc, ctx):
 
-        ll_yes, _ = rf.loglikelihood(ctx, ' yes')
-        ll_no, _ = rf.loglikelihood(ctx, ' no')
+        ll_yes, _ = rf.loglikelihood(ctx, ' ja')
+        ll_no, _ = rf.loglikelihood(ctx, ' nej')
 
         return ll_yes, ll_no
 
