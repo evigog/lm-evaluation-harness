@@ -22,11 +22,11 @@ class GPT2LM(LM):
             self.device = torch.device(device)
         else:
             self.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-
+        print('start model loading')
         # TODO: update this to be less of a hack once subfolder is fixed in HF
         self.gpt2 = transformers.AutoModelForCausalLM.from_pretrained(pretrained, revision=revision +("/" + subfolder if subfolder is not None else "")).to(self.device)
         self.gpt2.eval()
-
+        print('model loaded')
         # pretrained tokenizer for neo is broken for now so just hardcoding this to gpt2
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(pretrained if tokenizer is None else tokenizer, revision=revision, subfolder=subfolder)
 
@@ -50,6 +50,7 @@ class GPT2LM(LM):
 
         # multithreading and batching
         gpus = torch.cuda.device_count()
+        print(gpus)
         batch_size_per_gpu = batch_size # todo: adaptive batch size
 
         # TODO: fix multi-gpu
