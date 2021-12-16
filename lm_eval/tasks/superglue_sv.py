@@ -6,20 +6,20 @@ To-do:
 import numpy as np
 import sklearn
 import transformers.data.metrics.squad_metrics as squad_metrics
-from . common import HFTask, yesno
+from . common import HFTask, yesno, janej
 from lm_eval.base import rf
 from ..metrics import mean, acc_all, metric_max_over_ground_truths
 from ..utils import general_detokenize
 
 
-class BoolQ(HFTask):
+class BoolQ(HFTask): #Test has only -1, something wrong with the labels
     VERSION = 0
     DATASET_PATH = "AI-Sweden/super_glue_sv"
     DATASET_NAME = "boolq"
-    DATA_FILES = {"test":"boolq/test.csv"}
+    DATA_FILES = {"validation":"boolq/test.csv"}
 
     def has_training_docs(self):
-        return True
+        return False
 
     def has_validation_docs(self):
         return True
@@ -35,7 +35,7 @@ class BoolQ(HFTask):
         return f"{doc['passage']}\nFråga: {doc['question']}\nSvar:"
     
     def doc_to_target(self, doc):
-        return " " + yesno(doc['label']) 
+        return " " + janej(True if doc['label']==1 else False)
 
     def construct_requests(self, doc, ctx):
 

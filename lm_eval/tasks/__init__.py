@@ -44,6 +44,7 @@ from . import wikitext
 from . import lambada_multilingual
 from . import mutual
 from . import truthfulqa
+from . import superglue_sv
 
 ########################################
 # Translation tasks
@@ -216,6 +217,9 @@ TASK_REGISTRY = {
     "pile_ubuntu-irc": pile.PileUbuntuIrc,
     "pile_wikipedia": pile.PileWikipedia,
     "pile_youtubesubtitles": pile.PileYoutubeSubtitles,
+
+    #super_glue_sv
+    "boolq_sv":superglue_sv.BoolQ
     
 }
 
