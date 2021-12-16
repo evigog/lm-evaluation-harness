@@ -50,3 +50,9 @@ def yesno(x):
         return 'yes'
     else:
         return 'no'
+
+def janej(x):
+    if x:
+        return 'ja'
+    else:
+        return 'nej'
