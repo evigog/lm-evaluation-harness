@@ -2,6 +2,7 @@ from . common import HFTask, yesno
 from ..utils import general_detokenize
 from ..metrics import mean, acc_all, metric_max_over_ground_truths
 import os
+import numpy as np
 from lm_eval.base import rf
 from lm_eval.base import MultipleChoiceTask
 
@@ -139,8 +140,7 @@ class SweSat(HFTask, MultipleChoiceTask):
             "acc_norm": mean,
         }
 
-
-class SweFracas(HFTask): #The json contains list and I think it cannot handle this...
+class SweFracas(HFTask, MultipleChoiceTask): #The json contains list and I think it cannot handle this...
    VERSION = 0
    DATASET_PATH = "AI-Sweden/SuperLim"
    DATASET_NAME = "SweFracas"
@@ -157,7 +157,7 @@ class SweFracas(HFTask): #The json contains list and I think it cannot handle th
         return True
 
    def fewshot_description(self):
-    return "Is the answer on the question yes or no given the given statements?"
+    return "Är svaret på frågan ja, vet ej eller nej givet de givna påståendena?"
 
    def doc_to_text(self, doc):
     # raw_passage = doc["passage"]
@@ -182,25 +182,26 @@ class SweFracas(HFTask): #The json contains list and I think it cannot handle th
     return text
 
    def doc_to_target(self, doc):
-    return ' ja' if doc['svar']=='Ja' else ' nej'
+    return " " + doc['svar']
 
    def construct_requests(self, doc, ctx):
 
-        ll_yes, _ = rf.loglikelihood(ctx, ' ja')
-        ll_no, _ = rf.loglikelihood(ctx, ' nej')
-
-        return ll_yes, ll_no
+        lls = [
+           rf.loglikelihood(ctx, " {}".format(choice))[0]
+           for choice in ['Ja','Vet ej','Nej']
+        ]
+        return lls
 
    def process_results(self, doc, results):
-        ll_yes, ll_no = results
-        gold = True if doc['svar'] == 'Ja' else False
-        #gold = doc['responses'][0]["correct"]
+       gold = ['Ja','Vet ej','Nej'].index(doc['svar'])
 
-        acc = 1. if (ll_yes > ll_no) == gold else 0.
+       acc = 1. if np.argmax(results) == gold else 0.
+       completion_len = np.array([float(len(i)) for i in ['Ja','Vet ej','Nej']])
+       acc_norm = 1. if np.argmax(results / completion_len) == gold else 0.
 
-        return {
-            "acc": acc
-        }
+       return {
+           "acc": acc
+       }
 
    def higher_is_better(self):
         return {
@@ -211,3 +212,4 @@ class SweFracas(HFTask): #The json contains list and I think it cannot handle th
         return {
             "acc": mean
         }
+
