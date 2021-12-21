@@ -43,8 +43,10 @@ from . import pile
 from . import wikitext
 from . import lambada_multilingual
 from . import mutual
-from . import truthfulqa
+# from . import truthfulqa
 from . import superglue_sv
+
+from . import superlim
 
 ########################################
 # Translation tasks
@@ -149,8 +151,8 @@ TASK_REGISTRY = {
     "ethics_utilitarianism": hendrycks_ethics.EthicsUtilitarianism,
     "ethics_virtue": hendrycks_ethics.EthicsVirtue,
 
-     "truthfulqa_mc": truthfulqa.TruthfulQAMultipleChoice,
-     "truthfulqa_gen": truthfulqa.TruthfulQAGeneration,
+#     "truthfulqa_mc": truthfulqa.TruthfulQAMultipleChoice,
+#     "truthfulqa_gen": truthfulqa.TruthfulQAGeneration,
 
     # dialogue
     "mutual": mutual.MuTual,
@@ -218,9 +220,13 @@ TASK_REGISTRY = {
     "pile_wikipedia": pile.PileWikipedia,
     "pile_youtubesubtitles": pile.PileYoutubeSubtitles,
 
-    #super_glue_sv
-    "boolq_sv":superglue_sv.BoolQ
-    
+    #SuperLim
+    "swewsc": superlim.SweWsc,
+    "swefracas": superlim.SweFracas,
+
+    # super_glue_sv
+    "boolq_sv": superglue_sv.BoolQ
+
 }
 
 
