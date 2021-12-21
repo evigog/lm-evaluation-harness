@@ -45,7 +45,7 @@ from . import lambada_multilingual
 from . import mutual
 # from . import truthfulqa
 from . import superglue_sv
-
+from . import glue_sv
 from . import superlim
 
 ########################################
@@ -227,7 +227,17 @@ TASK_REGISTRY = {
     # super_glue_sv
     "boolq_sv": superglue_sv.BoolQ,
     "cb_sv": superglue_sv.CommitmentBank,
-    "copa_sv": superglue_sv.Copa
+    "copa_sv": superglue_sv.Copa,
+
+    # glue_sv
+    "mnli_sv": glue_sv.MNLI,
+    "mrpc_sv": glue_sv.MRPC,
+    "qnli_sv": glue_sv.QNLI,
+    "qqp_sv": glue_sv.QQP,
+    "rte_sv": glue_sv.RTE,
+    "sst_sv": glue_sv.SST,
+    "stsb": glue_sv.STSB,
+    "wnli": glue_sv.WNLI
 
 }
 
