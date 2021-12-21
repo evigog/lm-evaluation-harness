@@ -225,7 +225,9 @@ TASK_REGISTRY = {
     "swefracas": superlim.SweFracas,
 
     # super_glue_sv
-    "boolq_sv": superglue_sv.BoolQ
+    "boolq_sv": superglue_sv.BoolQ,
+    "cb_sv": superglue_sv.CommitmentBank,
+    "copa_sv": superglue_sv.Copa
 
 }
 
