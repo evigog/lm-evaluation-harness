@@ -45,8 +45,8 @@ class GPT2LM(LM):
             # gptneoconfig doesn't have n_ctx apparantly
             self.max_length = self.gpt2.config.max_position_embeddings
 
-        if isinstance(self.tokenizer, (transformers.GPT2Tokenizer, transformers.GPT2TokenizerFast)): 
-            assert self.tokenizer.encode('hello\n\nhello') == [31373, 198, 198, 31373]
+        #if isinstance(self.tokenizer, (transformers.GPT2Tokenizer, transformers.GPT2TokenizerFast)):
+        #    assert self.tokenizer.encode('hello\n\nhello') == [31373, 198, 198, 31373]
 
         # multithreading and batching
         gpus = torch.cuda.device_count()

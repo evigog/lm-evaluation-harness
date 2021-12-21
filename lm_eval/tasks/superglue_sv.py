@@ -10,13 +10,15 @@ from . common import HFTask, yesno, janej
 from lm_eval.base import rf
 from ..metrics import mean, acc_all, metric_max_over_ground_truths
 from ..utils import general_detokenize
+import os
 
 
 class BoolQ(HFTask): #Test has only -1, something wrong with the labels
     VERSION = 0
-    DATASET_PATH = "AI-Sweden/super_glue_sv"
+    DATASET_PATH = "Severine/super_glue_sv"
     DATASET_NAME = "boolq"
-    DATA_FILES = {"validation":"boolq/test.csv"}
+    DATA_FILES = {"train":"boolq/train.csv","validation":"boolq/val.csv"}
+    USE_AUTH_TOKEN = os.environ['HF_TOKEN']
 
     def has_training_docs(self):
         return False
@@ -35,12 +37,12 @@ class BoolQ(HFTask): #Test has only -1, something wrong with the labels
         return f"{doc['passage']}\nFråga: {doc['question']}\nSvar:"
     
     def doc_to_target(self, doc):
-        return " " + janej(True if doc['label']==1 else False)
+        return " " + janej(doc['label']==1)
 
     def construct_requests(self, doc, ctx):
 
-        ll_yes, _ = rf.loglikelihood(ctx, ' ja')
-        ll_no, _ = rf.loglikelihood(ctx, ' nej')
+        ll_yes, _ = rf.loglikelihood(ctx, ' Ja')
+        ll_no, _ = rf.loglikelihood(ctx, ' Nej')
 
         return ll_yes, ll_no
 

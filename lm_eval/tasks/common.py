@@ -6,13 +6,14 @@ class HFTask(Task):
     DATASET_PATH = None
     DATASET_NAME = None
     DATA_FILES = None
+    USE_AUTH_TOKEN = None
 
     def __init__(self):
         self.data = None
         super().__init__()
 
     def download(self):
-        self.data = datasets.load_dataset(path=self.DATASET_PATH, name=self.DATASET_NAME, data_files=self.DATA_FILES)
+        self.data = datasets.load_dataset(path=self.DATASET_PATH, name=self.DATASET_NAME, data_files=self.DATA_FILES,use_auth_token=self.USE_AUTH_TOKEN)
 
     def has_training_docs(self):
         """Whether the task has a training set"""
@@ -54,6 +55,6 @@ def yesno(x):
 
 def janej(x):
     if x:
-        return 'ja'
+        return 'Ja'
     else:
-        return 'nej'
+        return 'Nej'
