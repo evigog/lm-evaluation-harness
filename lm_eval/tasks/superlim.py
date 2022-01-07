@@ -184,9 +184,7 @@ class SweFracas(HFTask, MultipleChoiceTask):
        print("FNej:" + str(self.F_N))
        print("Tvetej" + str(self.T_V))
        print("FVetej:" + str(self.F_V))
-       print("Ja" + str(self.J))
-       print("Vetej:" + str(self.V))
-       print("Nej:" + str(self.N))
+
        return {
            "acc": mean,
            "acc_norm": mean,
