@@ -71,6 +71,59 @@ class SweWsc(HFTask):
             "acc": mean
         }
 
+class SweFracas(HFTask, MultipleChoiceTask):
+   VERSION = 0
+   DATASET_PATH = "AI-Sweden/SuperLim"
+   DATASET_NAME = "SweFracas"
+   DATA_FILES = {"test":"SweFracas/swefracas.csv"}
+   #USE_AUTH_TOKEN = os.environ['HF_TOKEN']
+
+   def has_training_docs(self):
+        return False
+
+   def has_validation_docs(self):
+        return False
+
+   def has_test_docs(self):
+        return True
+
+   def fewshot_description(self):
+    return "Är svaret på frågan ja, vet ej eller nej givet de givna påståendena?"
+
+   def _convert_standard(self, doc):
+       query = self.doc_to_query(doc)
+       out_doc = {
+           "query": query,
+           "choices": ['Ja','Vet ej','Nej','Jo'],
+           "gold": ['Ja','Vet ej','Nej','Jo'].index(doc['svar'])
+       }
+       return out_doc
+
+   def doc_to_query(self, doc):
+    # raw_passage = doc["passage"]
+    # # NOTE: HuggingFace span indices are word-based not character-based.
+    # pre = " ".join(raw_passage.split()[:doc["challenge_begin"]])
+    # post = raw_passage[len(pre) + len(doc["challenge_text"]) + 1:]
+    # passage = general_detokenize(pre + " *{}*".format(doc["challenge_text"]) + post)
+    # noun = doc["response_text"]
+    # pronoun = doc["challenge_text"]
+    question = doc["fråga"]
+    index=1
+    context = ""
+    while ("premiss_"+str(index) in doc):
+        if (doc["premiss_"+str(index)]!= None) :
+            context += "Premiss " +str(index) +": "+doc["premiss_"+str(index)]+"\n"
+        index+=1
+    text = (
+            f"{context}"
+            + f"Fråga: {question}\n"
+            + "Svar:"
+        )
+    return text
+
+   def doc_to_text(self, doc):
+       return doc["query"]
+
 
 class SweSat(HFTask, MultipleChoiceTask):
    VERSION = 0
@@ -139,58 +192,5 @@ class SweSat(HFTask, MultipleChoiceTask):
             "acc": mean,
             "acc_norm": mean,
         }
-
-class SweFracas(HFTask, MultipleChoiceTask): #The json contains list and I think it cannot handle this...
-   VERSION = 0
-   DATASET_PATH = "AI-Sweden/SuperLim"
-   DATASET_NAME = "SweFracas"
-   DATA_FILES = {"test":"SweFracas/swefracas.csv"}
-   #USE_AUTH_TOKEN = os.environ['HF_TOKEN']
-
-   def has_training_docs(self):
-        return False
-
-   def has_validation_docs(self):
-        return False
-
-   def has_test_docs(self):
-        return True
-
-   def fewshot_description(self):
-    return "Är svaret på frågan ja, vet ej eller nej givet de givna påståendena?"
-
-   def _convert_standard(self, doc):
-       query = self.doc_to_query(doc)
-       out_doc = {
-           "query": query,
-           "choices": ['Ja','Vet ej','Nej','Jo'],
-           "gold": ['Ja','Vet ej','Nej','Jo'].index(doc['svar'])
-       }
-       return out_doc
-
-   def doc_to_query(self, doc):
-    # raw_passage = doc["passage"]
-    # # NOTE: HuggingFace span indices are word-based not character-based.
-    # pre = " ".join(raw_passage.split()[:doc["challenge_begin"]])
-    # post = raw_passage[len(pre) + len(doc["challenge_text"]) + 1:]
-    # passage = general_detokenize(pre + " *{}*".format(doc["challenge_text"]) + post)
-    # noun = doc["response_text"]
-    # pronoun = doc["challenge_text"]
-    question = doc["fråga"]
-    index=1
-    context = ""
-    while ("premiss_"+str(index) in doc):
-        if (doc["premiss_"+str(index)]!= None) :
-            context += "Premiss " +str(index) +": "+doc["premiss_"+str(index)]+"\n"
-        index+=1
-    text = (
-            f"Passage:\n{context}"
-            + f"Fråga: {question}\n"
-            + "Svar:"
-        )
-    return text
-
-   def doc_to_text(self, doc):
-       return doc["query"]
 
 
