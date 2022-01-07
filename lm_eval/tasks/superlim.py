@@ -163,8 +163,8 @@ class SweFracas(HFTask, MultipleChoiceTask): #The json contains list and I think
        query = self.doc_to_query(doc)
        out_doc = {
            "query": query,
-           "choices": ['Ja','Vet ej','Nej'],
-           "gold": ['Ja','Vet ej','Nej'].index(doc['svar'])
+           "choices": ['Ja','Vet ej','Nej','Jo'],
+           "gold": ['Ja','Vet ej','Nej','Jo'].index(doc['svar'])
        }
        return out_doc
 
