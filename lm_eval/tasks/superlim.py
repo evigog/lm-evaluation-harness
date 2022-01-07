@@ -23,7 +23,7 @@ class SweWsc(HFTask):
         return True
 
    def fewshot_description(self):
-    return "Does the noun match the pronoun?"
+    return "Stämmer substantivet överens med pronomenet?"
 
    def doc_to_text(self, doc):
     raw_passage = doc["passage"]
