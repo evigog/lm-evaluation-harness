@@ -1,7 +1,7 @@
 import numpy as np
 from lm_eval.base import rf
 from ..metrics import mean, matthews_corrcoef, f1_score
-from .common import HFTask, yesno
+from .common import HFTask, yesno, janej
 from ..utils import general_detokenize
 import os
 
@@ -15,7 +15,7 @@ import os
 
 class SST(HFTask):
     VERSION = 0
-    DATASET_PATH = "Severine/glue_sv"
+    DATASET_PATH = "AI-Sweden/glue_sv"
     DATASET_NAME = "sst"
     DATA_FILES = {"train": "sst/train.csv", "validation": "sst/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
@@ -41,8 +41,8 @@ class SST(HFTask):
         return " {}".format({1: "positiv", 0: "negativ"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
-        ll_positive, _ = rf.loglikelihood(ctx, " positiv")
-        ll_negative, _ = rf.loglikelihood(ctx, " negativ")
+        ll_positive, _ = rf.loglikelihood(ctx, " Positiv")
+        ll_negative, _ = rf.loglikelihood(ctx, " Negativ")
         return ll_positive, ll_negative
 
     def process_results(self, doc, results):
@@ -69,7 +69,7 @@ class SST(HFTask):
 
 class MNLI(HFTask):
     VERSION = 0
-    DATASET_PATH = "Severine/glue_sv"
+    DATASET_PATH = "AI-Sweden/glue_sv"
     DATASET_NAME = "mnli"
     DATA_FILES = {"train": "mnli/train.csv", "validation": "mnli/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
@@ -141,7 +141,7 @@ class MNLI(HFTask):
 
 class QNLI(HFTask):
     VERSION = 0
-    DATASET_PATH = "Severine/glue_sv"
+    DATASET_PATH = "AI-Sweden/glue_sv"
     DATASET_NAME = "qnli"
     DATA_FILES = {"train": "qnli/train.csv", "validation": "qnli/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
@@ -192,7 +192,7 @@ class QNLI(HFTask):
 
 class WNLI(HFTask):
     VERSION = 0
-    ATASET_PATH = "Severine/glue_sv"
+    ATASET_PATH = "AI-Sweden/glue_sv"
     DATASET_NAME = "wnli"
     DATA_FILES = {"train": "wnli/train.csv", "validation": "wnli/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
@@ -257,7 +257,7 @@ class RTE(HFTask):
         return False
 
     def doc_to_text(self, doc):
-        return "{}\nFråga: {} Sant, Falskt or Ingetdera?\nSvar:".format(
+        return "{}\nFråga: {} Sant or Falskt?\nSvar:".format(
             doc["sentence1"],
             doc["sentence2"],
         )
@@ -265,11 +265,11 @@ class RTE(HFTask):
     def doc_to_target(self, doc):
         # 0 = entailment
         # 1 = not_entailment
-        return " {}".format({0: "True", 1: "False"}[doc["label"]])
+        return " {}".format({0: "Sant", 1: "Falskt"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
-        ll_true, _ = rf.loglikelihood(ctx, " True")
-        ll_false, _ = rf.loglikelihood(ctx, " False")
+        ll_true, _ = rf.loglikelihood(ctx, " Sant")
+        ll_false, _ = rf.loglikelihood(ctx, " Falskt")
         return ll_true, ll_false
 
     def process_results(self, doc, results):
@@ -309,20 +309,20 @@ class MRPC(HFTask):
         return False
 
     def fewshot_description(self):
-        return "Indicate if both sentences mean the same thing."
+        return "Ange om båda meningarna betyder samma sak."
 
     def doc_to_text(self, doc):
-        return "Sentence 1: {}\nSentence 2: {}\nQuestion: Do both sentences mean the same thing?\nAnswer:".format(
+        return "Mening 1: {}\nMening 2: {}\nFråga: Betyder båda meningarna samma sak?\nSvar:".format(
             general_detokenize(doc["sentence1"]),
             general_detokenize(doc["sentence2"]),
         )
 
     def doc_to_target(self, doc):
-        return " {}".format(yesno(doc["label"]))
+        return " {}".format(janej(doc["label"])) #TODO check janej label correct
 
     def construct_requests(self, doc, ctx):
-        ll_yes, _ = rf.loglikelihood(ctx, " yes")
-        ll_no, _ = rf.loglikelihood(ctx, " no")
+        ll_yes, _ = rf.loglikelihood(ctx, " Ja")
+        ll_no, _ = rf.loglikelihood(ctx, " Nej")
         return ll_yes, ll_no
 
     def process_results(self, doc, results):
@@ -362,20 +362,20 @@ class QQP(HFTask):
         return False
 
     def fewshot_description(self):
-        return "Indicate if both questions ask the same thing."
+        return "Ange om båda frågorna ställer samma sak."
 
     def doc_to_text(self, doc):
-        return "Question 1: {}\nQuestion 2: {}\nQuestion: Do both questions ask the same thing?\nAnswer:".format(
+        return "Fråga 1: {}\nFråga 2: {}\nFråga: Ställer båda frågorna samma sak?\nSvar:".format(
             doc["question1"],
             doc["question2"],
         )
 
     def doc_to_target(self, doc):
-        return " {}".format(yesno(doc["label"]))
+        return " {}".format(janej(doc["label"]))
 
     def construct_requests(self, doc, ctx):
-        ll_yes, _ = rf.loglikelihood(ctx, " yes")
-        ll_no, _ = rf.loglikelihood(ctx, " no")
+        ll_yes, _ = rf.loglikelihood(ctx, " Ja")
+        ll_no, _ = rf.loglikelihood(ctx, " Nej")
         return ll_yes, ll_no
 
     def process_results(self, doc, results):

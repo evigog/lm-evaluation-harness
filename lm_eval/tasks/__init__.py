@@ -236,7 +236,6 @@ TASK_REGISTRY = {
     "qqp_sv": glue_sv.QQP,
     "rte_sv": glue_sv.RTE,
     "sst_sv": glue_sv.SST,
-    "stsb": glue_sv.STSB,
     "wnli": glue_sv.WNLI
 
 }

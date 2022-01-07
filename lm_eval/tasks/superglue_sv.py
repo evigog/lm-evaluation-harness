@@ -15,7 +15,7 @@ import os
 
 class BoolQ(HFTask): #Test has only -1, something wrong with the labels
     VERSION = 0
-    DATASET_PATH = "Severine/super_glue_sv"
+    DATASET_PATH = "AI-Sweden/super_glue_sv"
     DATASET_NAME = "boolq"
     DATA_FILES = {"train":"boolq/train.csv","validation":"boolq/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
@@ -69,7 +69,7 @@ class BoolQ(HFTask): #Test has only -1, something wrong with the labels
 
 class CommitmentBank(HFTask):
     VERSION = 0
-    DATASET_PATH = "Severine/super_glue_sv"
+    DATASET_PATH = "AI-Sweden/super_glue_sv"
     DATASET_NAME = "cb"
     DATA_FILES = {"train": "cb/train.csv", "validation": "cb/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
@@ -142,7 +142,7 @@ class CommitmentBank(HFTask):
 
 class Copa(HFTask):
     VERSION = 0
-    DATASET_PATH = "Severine/super_glue_sv"
+    DATASET_PATH = "AI-Sweden/super_glue_sv"
     DATASET_NAME = "copa"
     DATA_FILES = {"train": "copa/train.csv", "validation": "copa/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
