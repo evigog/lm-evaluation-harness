@@ -227,8 +227,9 @@ class Task(abc.ABC):
         return ""
 
     def fewshot_context(self, doc, num_fewshot, provide_description, rnd):
+        provide_description=True #change whether you want or don't want
         raw_description = self.fewshot_description()
-        description = (raw_description + "\n===\n\n") if provide_description and raw_description else ""
+        description = (raw_description + "\n===\n") if provide_description and raw_description else ""
 
         if num_fewshot == 0:
             labeled_examples = ""
