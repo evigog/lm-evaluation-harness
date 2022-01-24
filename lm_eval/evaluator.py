@@ -37,6 +37,7 @@ def simple_evaluate(model, model_args, task_names, num_fewshot=0, batch_size=Non
 
 
 def evaluate(lm, task_dict, provide_description, num_fewshot, limit, bootstrap_iters=100000):
+    #resultsdoc = open('prompts.txt','a')#temporary extra Severine
     assert not provide_description # not implemented. todo: implement proper description-providing system
 
     # TODO: completely refactor this entire function to not be a huge mess, ideally breaking it down into smaller pieces
@@ -103,6 +104,13 @@ def evaluate(lm, task_dict, provide_description, num_fewshot, limit, bootstrap_i
         print("Running", reqtype, "requests")
         resps = getattr(lm, reqtype)([req.args for req in reqs])
 
+
+
+        #for i in range(int(len(reqs)/2)):
+          #  resultsdoc.write(reqs[2*i].args[0])
+          #  resultsdoc.write(str(reqs[2*i].args[1])+str(resps[2*i][0]))
+          #  resultsdoc.write(str(reqs[2 * i +1].args[1]) + str(resps[2 * i +1][0]))
+
         resps = [x if req.index is None else x[req.index] for x, req in zip(resps, reqs)]
 
         for resp, (i, task_name, doc, doc_id) in zip(resps, requests_origin[reqtype]):
@@ -132,7 +140,7 @@ def evaluate(lm, task_dict, provide_description, num_fewshot, limit, bootstrap_i
         stderr = lm_eval.metrics.stderr_for_metric(task.aggregation()[metric], bootstrap_iters=min(bootstrap_iters, 1000) if metric in ["bleu", "chrf", "ter"] else bootstrap_iters)
         if stderr is not None:
             results[task_name][metric + "_stderr"] = stderr(items)
-    
+    resultsdoc.close()
     return {
         "results": dict(results),
         "versions": dict(versions)
