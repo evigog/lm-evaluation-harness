@@ -13,15 +13,18 @@ from ..utils import general_detokenize
 import os
 
 
-class BoolQ(HFTask): #Test has only -1, something wrong with the labels
+class BoolQ(HFTask):
     VERSION = 0
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "boolq_sv"
+    """
     DATASET_PATH = "AI-Sweden/super_glue_sv"
     DATASET_NAME = "boolq"
     DATA_FILES = {"train":"boolq/train.csv","validation":"boolq/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
-
+    """
     def has_training_docs(self):
-        return False
+        return True
 
     def has_validation_docs(self):
         return True
@@ -69,11 +72,14 @@ class BoolQ(HFTask): #Test has only -1, something wrong with the labels
 
 class CommitmentBank(HFTask):
     VERSION = 0
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "cb_sv"
+    """
     DATASET_PATH = "AI-Sweden/super_glue_sv"
     DATASET_NAME = "cb"
     DATA_FILES = {"train": "cb/train.csv", "validation": "cb/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
-
+    """
     def has_training_docs(self):
         return True
 
@@ -142,11 +148,14 @@ class CommitmentBank(HFTask):
 
 class Copa(HFTask):
     VERSION = 0
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "copa_sv"
+    """
     DATASET_PATH = "AI-Sweden/super_glue_sv"
     DATASET_NAME = "copa"
     DATA_FILES = {"train": "copa/train.csv", "validation": "copa/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
-
+    """
     def has_training_docs(self):
         return True
 

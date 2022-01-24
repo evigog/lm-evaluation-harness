@@ -15,10 +15,10 @@ import os
 
 class SST(HFTask):
     VERSION = 0
-    DATASET_PATH = "AI-Sweden/glue_sv"
-    DATASET_NAME = "sst"
-    DATA_FILES = {"train": "sst/train.csv", "validation": "sst/val.csv"}
-    USE_AUTH_TOKEN = os.environ['HF_TOKEN']
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "sst_sv"
+    #DATA_FILES = {"train": "sst/train.csv", "validation": "sst/val.csv"}
+    #USE_AUTH_TOKEN = os.environ['HF_TOKEN']
 
     def has_training_docs(self):
         return True
@@ -69,10 +69,14 @@ class SST(HFTask):
 
 class MNLI(HFTask):
     VERSION = 0
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "mnli_sv"
+    """
     DATASET_PATH = "AI-Sweden/glue_sv"
     DATASET_NAME = "mnli"
     DATA_FILES = {"train": "mnli/train.csv", "validation": "mnli/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
+    """
 
     def has_training_docs(self):
         return True
@@ -141,11 +145,14 @@ class MNLI(HFTask):
 
 class QNLI(HFTask):
     VERSION = 0
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "qnli_sv"
+    """
     DATASET_PATH = "AI-Sweden/glue_sv"
     DATASET_NAME = "qnli"
     DATA_FILES = {"train": "qnli/train.csv", "validation": "qnli/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
-
+    """
     def has_training_docs(self):
         return True
 
@@ -164,7 +171,7 @@ class QNLI(HFTask):
     def doc_to_target(self, doc):
         # True = entailment
         # False = not entailment
-        return " {}".format({0: "Ja", 1: "Nej"}[doc["label"]])
+        return " {}".format({1: "Ja", 0: "Nej"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
         ll_yes, _ = rf.loglikelihood(ctx, " Ja")
@@ -173,7 +180,7 @@ class QNLI(HFTask):
 
     def process_results(self, doc, results):
         ll_yes, ll_no = results
-        pred = ll_no > ll_yes
+        pred = ll_no < ll_yes
         gold = doc["label"]
         return {
             "acc": pred == gold
@@ -192,11 +199,14 @@ class QNLI(HFTask):
 
 class WNLI(HFTask):
     VERSION = 0
-    ATASET_PATH = "AI-Sweden/glue_sv"
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "wnli_sv"
+    """
+    DATASET_PATH = "AI-Sweden/glue_sv"
     DATASET_NAME = "wnli"
     DATA_FILES = {"train": "wnli/train.csv", "validation": "wnli/val.csv"}
     USE_AUTH_TOKEN = os.environ['HF_TOKEN']
-
+    """
     def has_training_docs(self):
         return True
 
@@ -216,7 +226,7 @@ class WNLI(HFTask):
         # True = entailment
         # False = contradiction
         # Neither = neutral
-        return " {}".format({0: "Sant", 1: "Falskt"}[doc["label"]])
+        return " {}".format({1: "Sant", 0: "Falskt"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
         ll_true, _ = rf.loglikelihood(ctx, " Sant")
@@ -244,8 +254,8 @@ class WNLI(HFTask):
 
 class RTE(HFTask):
     VERSION = 0
-    DATASET_PATH = "glue"
-    DATASET_NAME = "rte"
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "rte_sv"
 
     def has_training_docs(self):
         return True
@@ -265,7 +275,7 @@ class RTE(HFTask):
     def doc_to_target(self, doc):
         # 0 = entailment
         # 1 = not_entailment
-        return " {}".format({0: "Sant", 1: "Falskt"}[doc["label"]])
+        return " {}".format({1: "Sant", 0: "Falskt"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
         ll_true, _ = rf.loglikelihood(ctx, " Sant")
@@ -274,7 +284,7 @@ class RTE(HFTask):
 
     def process_results(self, doc, results):
         ll_true, ll_false = results
-        pred = ll_false > ll_true
+        pred = ll_false < ll_true
         gold = doc["label"]
         return {
             "acc": pred == gold
@@ -296,8 +306,8 @@ class RTE(HFTask):
 
 class MRPC(HFTask):
     VERSION = 0
-    DATASET_PATH = "glue"
-    DATASET_NAME = "mrpc"
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "mrpc_sv"
 
     def has_training_docs(self):
         return True
@@ -318,7 +328,7 @@ class MRPC(HFTask):
         )
 
     def doc_to_target(self, doc):
-        return " {}".format(janej(doc["label"])) #TODO check janej label correct
+        return " {}".format({1: "Ja", 0: "Nej"}[doc["label"]]) #TODO check janej label correct
 
     def construct_requests(self, doc, ctx):
         ll_yes, _ = rf.loglikelihood(ctx, " Ja")
@@ -349,8 +359,8 @@ class MRPC(HFTask):
 
 class QQP(HFTask):
     VERSION = 0
-    DATASET_PATH = "glue"
-    DATASET_NAME = "qqp"
+    DATASET_PATH = "KBLab/overlim"
+    DATASET_NAME = "qqp_sv"
 
     def has_training_docs(self):
         return True
@@ -371,7 +381,7 @@ class QQP(HFTask):
         )
 
     def doc_to_target(self, doc):
-        return " {}".format(janej(doc["label"]))
+        return " {}".format({1: "Ja", 0: "Nej"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
         ll_yes, _ = rf.loglikelihood(ctx, " Ja")
@@ -399,7 +409,7 @@ class QQP(HFTask):
             "f1": f1_score
         }
 
-
+#ToDo For later
 class STSB(HFTask):
     VERSION = 0
     DATASET_PATH = "glue"

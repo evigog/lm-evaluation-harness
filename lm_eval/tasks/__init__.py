@@ -220,23 +220,25 @@ TASK_REGISTRY = {
     "pile_wikipedia": pile.PileWikipedia,
     "pile_youtubesubtitles": pile.PileYoutubeSubtitles,
 
-    #SuperLim
+
+    # Swedish few-shot tasks
+    #superLim
     "swewsc": superlim.SweWsc,
     "swefracas": superlim.SweFracas,
 
-    # super_glue_sv
+    #super_glue_sv
     "boolq_sv": superglue_sv.BoolQ,
     "cb_sv": superglue_sv.CommitmentBank,
     "copa_sv": superglue_sv.Copa,
 
-    # glue_sv
+    #glue_sv
     "mnli_sv": glue_sv.MNLI,
     "mrpc_sv": glue_sv.MRPC,
     "qnli_sv": glue_sv.QNLI,
     "qqp_sv": glue_sv.QQP,
     "rte_sv": glue_sv.RTE,
     "sst_sv": glue_sv.SST,
-    "wnli": glue_sv.WNLI
+    "wnli_sv": glue_sv.WNLI
 
 }
 
