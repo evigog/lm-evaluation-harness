@@ -105,7 +105,7 @@ class MNLI(HFTask):
         # True = entailment
         # False = contradiction
         # Neither = neutral
-        return " {}".format({'entailment': "Sant", 'neutral': "Ingetdera", 'contradiction': "Falskt"}[doc["label"]])
+        return " {}".format({0: "Sant", 1: "Ingetdera", 2: "Falskt"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
         ll_true, _ = rf.loglikelihood(ctx, " Sant")
@@ -115,7 +115,7 @@ class MNLI(HFTask):
 
     def process_results(self, doc, results):
         gold = doc["label"]
-        pred = {"entailment": 0, "neutral": 1, "contradiction": 2}[doc["label"]]
+        pred = np.argmax(results)
         return {
             "acc": pred == gold
         }
@@ -164,14 +164,14 @@ class QNLI(HFTask):
 
     def doc_to_text(self, doc):
         return "{}\n{}\nFråga: Svarar detta svar på frågan?\nSvar:".format(
-            doc["question"],
-            doc["sentence"],
+            doc["premise"],
+            doc["hypothesis"],
         )
 
     def doc_to_target(self, doc):
         # True = entailment
         # False = not entailment
-        return " {}".format({1: "Ja", 0: "Nej"}[doc["label"]])
+        return " {}".format({0: "Ja", 1: "Nej"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
         ll_yes, _ = rf.loglikelihood(ctx, " Ja")
@@ -180,7 +180,7 @@ class QNLI(HFTask):
 
     def process_results(self, doc, results):
         ll_yes, ll_no = results
-        pred = ll_no < ll_yes
+        pred = ll_no > ll_yes
         gold = doc["label"]
         return {
             "acc": pred == gold
@@ -218,8 +218,8 @@ class WNLI(HFTask):
 
     def doc_to_text(self, doc):
         return "{}\nFråga: {} Sant or Falskt?\nSvar:".format(
-            doc["sentence1"],
-            doc["sentence2"],
+            doc["premise"],
+            doc["hypothesis"],
         )
 
     def doc_to_target(self, doc):
@@ -268,14 +268,14 @@ class RTE(HFTask):
 
     def doc_to_text(self, doc):
         return "{}\nFråga: {} Sant or Falskt?\nSvar:".format(
-            doc["sentence1"],
-            doc["sentence2"],
+            doc["premise"],
+            doc["hypothesis"],
         )
 
     def doc_to_target(self, doc):
         # 0 = entailment
         # 1 = not_entailment
-        return " {}".format({1: "Sant", 0: "Falskt"}[doc["label"]])
+        return " {}".format({0: "Sant", 1: "Falskt"}[doc["label"]])
 
     def construct_requests(self, doc, ctx):
         ll_true, _ = rf.loglikelihood(ctx, " Sant")
@@ -284,7 +284,7 @@ class RTE(HFTask):
 
     def process_results(self, doc, results):
         ll_true, ll_false = results
-        pred = ll_false < ll_true
+        pred = ll_false > ll_true
         gold = doc["label"]
         return {
             "acc": pred == gold
@@ -323,8 +323,8 @@ class MRPC(HFTask):
 
     def doc_to_text(self, doc):
         return "Mening 1: {}\nMening 2: {}\nFråga: Betyder båda meningarna samma sak?\nSvar:".format(
-            general_detokenize(doc["sentence1"]),
-            general_detokenize(doc["sentence2"]),
+            general_detokenize(doc["text_a"]),
+            general_detokenize(doc["text_b"]),
         )
 
     def doc_to_target(self, doc):
@@ -376,8 +376,8 @@ class QQP(HFTask):
 
     def doc_to_text(self, doc):
         return "Fråga 1: {}\nFråga 2: {}\nFråga: Ställer båda frågorna samma sak?\nSvar:".format(
-            doc["question1"],
-            doc["question2"],
+            doc["text_a"],
+            doc["text_b"],
         )
 
     def doc_to_target(self, doc):
