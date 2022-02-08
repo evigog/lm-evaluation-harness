@@ -140,7 +140,7 @@ def evaluate(lm, task_dict, provide_description, num_fewshot, limit, bootstrap_i
         stderr = lm_eval.metrics.stderr_for_metric(task.aggregation()[metric], bootstrap_iters=min(bootstrap_iters, 1000) if metric in ["bleu", "chrf", "ter"] else bootstrap_iters)
         if stderr is not None:
             results[task_name][metric + "_stderr"] = stderr(items)
-    resultsdoc.close()
+    #resultsdoc.close()
     return {
         "results": dict(results),
         "versions": dict(versions)
